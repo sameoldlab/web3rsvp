@@ -17,5 +17,5 @@ pub struct Event {
     deposit: u64,
     owner: Identity,
     name: str[10],
-    numOfRsvps: u64,
+    numOfRSVPs: u64,
 }

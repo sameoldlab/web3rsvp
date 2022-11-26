@@ -31,7 +31,7 @@ impl eventPlatform for Contract {
             deposit: price,
             owner: msg_sender().unwrap(),
             name: event_name,
-            numOfRsvps: 0,
+            numOfRSVPs: 0,
         };
 
 
