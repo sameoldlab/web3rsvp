@@ -4,30 +4,21 @@ dep event_platform;
 use event_platform::*;
 
 use std::{
-   chain::auth::{AuthError, msg_sender},
-    constants::BASE_ASSET_ID,
-    context::{
-   call_frames::msg_asset_id,
-        msg_amount,
-        this_balance,
-    },
-    contract_id::ContractId,
     identity::Identity,
-    logging::log,
-    result::Result,
+    contract_id::ContractId,
     storage::StorageMap,
-    token::transfer,
+    auth::{
+        AuthError,
+        msg_sender,
+         },
+    call_frames::msg_asset_id,
+    context::{msg_amount, this_balance},
+    result::Result,
 };
 
 storage {
     events: StorageMap<u64, Event> = StorageMap {},
     event_id_counter: u64 = 0,
-}
-
-pub enum InvalidRSVPError {
-    IncorrectAssetId: (),
-    NotEnoughTokens: (),
-    InvalidEventID: (),
 }
 
 impl eventPlatform for Contract {
@@ -40,8 +31,9 @@ impl eventPlatform for Contract {
             deposit: price,
             owner: msg_sender().unwrap(),
             name: event_name,
-            num_of_rsvps: 0,
+            numOfRsvps: 0,
         };
+
 
         storage.events.insert(campaign_id, new_event);
         storage.event_id_counter += 1;
@@ -50,31 +42,17 @@ impl eventPlatform for Contract {
     }
 
     #[storage(read, write)]
-    fn rsvp(event_id: u64) -> Event {
-        let sender = msg_sender().unwrap();
-        let asset_id = msg_asset_id();
-        let amount = msg_amount();
-
-     // get the event
-        let mut selected_event = storage.events.get(event_id);
-
-    // check to see if the eventId is greater than storage.event_id_counter, if
-    // it is, revert
-        require(selected_event.unique_id < storage.event_id_counter, InvalidRSVPError::InvalidEventID);
-        // log(0);
-    // check to see if the asset_id and amounts are correct, etc, if they aren't revert
-        require(asset_id == BASE_ASSET_ID, InvalidRSVPError::IncorrectAssetId);
-        // log(1);
-        require(amount >= selected_event.deposit, InvalidRSVPError::NotEnoughTokens);
-        // log(2);
-    //send the payout
-        transfer(amount, asset_id, selected_event.owner);
-
-    // edit the event
-        selected_event.num_of_rsvps += 1;
-        storage.events.insert(event_id, selected_event);
-
-    // return the event
-        return selected_event;
+    fn rsvp(eventId: u64) -> Event {
+    //variables are immutable by default, so you need to use the mut keyword
+    let mut selectedEvent = storage.events.get(eventId);
+    if (eventId > storage.event_id_counter) {
+        //if the user passes in an eventID that does not exist, return the first event
+        let fallback = storage.events.get(0);
+        return fallback;
+    }
+    //send the money from the msg_sender to the owner of the selected event
+    selectedEvent.numOfRSVPs += 1;
+    storage.events.insert(eventId, selectedEvent);
+    return selectedEvent;
     }
 }
