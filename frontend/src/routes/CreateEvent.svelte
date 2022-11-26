@@ -10,11 +10,11 @@
 	// 	});
 	// 	console.log('Wallet balances', balancesFormatted);
 	// });
-
+    const numlen = (num: number) => Math.log(num) * Math.LOG10E + 1;
 	let eventName: string="", deposit: number, maxCap: number, eventID: string;
     $: eventLen = eventName == "" ? 'width:7rem' : `width: ${Math.floor(eventName.length)+4}rem !important`
-    $: depositLen = eventName == "" ? 'width:7rem' : `width: ${Math.floor(eventName.length)+4}rem !important`
-    $: eventLen = eventName == "" ? 'width:7rem' : `width: ${Math.floor(eventName.length)+4}rem !important`
+    $: depositLen = !deposit ? 'width:3rem' : `width: ${numlen(deposit)+4}rem !important`
+    $: capLen = !maxCap ? 'width:3rem' : `width: ${numlen(maxCap)+4}rem !important`
 	async function createEvent() {
 		try {
 			console.log('sending transaction');
@@ -53,10 +53,9 @@
     <input
     bind:value={maxCap}
     class="px-2 w-14 self-baseline
-    bg-transparent focus:outline-none"
-    pattern="^\s*?[\d]+(.[\d]*)?\s*?$"
-    type="text" inputmode="number"
-    placeholder="1"
+    bg-transparent focus:outline-none appearance-none"
+    type="number" min="1"
+    placeholder="1" style={capLen}
     />
 	<p class="self-baseline">guests. Make the entry price</p>
     
@@ -65,9 +64,9 @@
         <input
         bind:value={deposit}
         class="px-2 w-14 self-baseline
-        bg-transparent focus:outline-none"
+        bg-transparent focus:outline-none appearance-none"
         type="number" min="1"
-        placeholder="1" 
+        placeholder="1" style={depositLen}
         />
         <p class="self-baseline">uETH. </p>
 				<!-- {#if deposit}

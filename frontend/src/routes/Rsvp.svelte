@@ -29,9 +29,9 @@
 	}
 </script>
 
-<div>
-	<h2 class="font-semibold text-3xl">RSVP for an Event</h2>
-	<form class="inline-flex mt-4  p-2" action="">
+<div class="mt-8">
+	<h2 class="font-semibold text-xl">RSVP for an Event</h2>
+	<form class="inline-flex mt-2" action="">
 		<input class="bg-zinc-800 rounded-l-xl p-4 " placeholder="EventID" bind:value={rsvpId} />
 		{#if $web3.isConnected}
 			<button

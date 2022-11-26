@@ -3,8 +3,20 @@ node_modules
 /build
 /.svelte-kit
 /package
+outputdir
 .env
 .env.*
 !.env.example
 .vercel
 .output
+
+# Config files
+*config.*
+!svelte.config.js
+.eslint*
+.prettier*
+
+# Ignore files for PNPM, NPM and YARN
+.npmrc
+.pnpm-lock.yaml
+package-lock.json
