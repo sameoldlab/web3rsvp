@@ -31,6 +31,8 @@
             
 		}
 	}
+export const ssr = false;
+
 </script>
 
 <form class="inline-flex flex-wrap font-smedium align-top text-4xl">

@@ -46,6 +46,8 @@
         + '...' 
         + str.substring(str.length-4,str.length);
     };
+export const ssr = false;
+
 </script>
 
 {#if $web3.isConnected}

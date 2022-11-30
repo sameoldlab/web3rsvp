@@ -1,4 +1,8 @@
-# Building on Fuel with Sway - Web3RSVP
+ Built with https://github.com/camiinthisthang/learnsway-web3rsvp guide
+ Modified with sveltekit frontend. 
+ Updated for fuel v0.31.1 beta-2 and integrating Fuel browser wallet
+ 
+ # Building on Fuel with Sway - Web3RSVP
 
 In this workshop, we'll build a fullstack dapp on Fuel.
 
@@ -58,7 +62,7 @@ _Some resources that may be helpful:_
 
    ```bash
    $ forc --version
-   forc 0.26.0
+   forc 0.31.1
    ```
 
 ### Editor
@@ -104,7 +108,7 @@ Then with `forc` installed, create a project inside of your `Web3RSVP` folder:
 
 ```sh
 $ cd Web3RSVP
-$ forc new eventPlatform
+$ forc new rsvpContract
 To compile, use `forc build`, and to run tests use `forc test`
 
 ---
@@ -114,7 +118,7 @@ Here is the project that `Forc` has initialized:
 
 ```console
 $ tree Web3RSVP
-eventPlatform
+rsvpContract
 ├── Cargo.toml
 ├── Forc.toml
 ├── src
@@ -182,10 +186,10 @@ dep event_platform;
 use event_platform::*;
 
 use std::{
-   chain::auth::{AuthError, msg_sender},
+   auth::{AuthError, msg_sender},
     constants::BASE_ASSET_ID,
+    call_frames::msg_asset_id,
     context::{
-   call_frames::msg_asset_id,
         msg_amount,
         this_balance,
     },
@@ -280,13 +284,13 @@ With this, you'll get a fuel address that looks something like this: `fuel1efz7l
 
 #### Get Testnet Coins
 
-With your account address in hand, head to the [testnet faucet](https://faucet-beta-1.fuel.network/) to get some coins sent to your wallet.
+With your account address in hand, head to the [testnet faucet](https://faucet-beta-2.fuel.network/) to get some coins sent to your wallet.
 
 ## Deploy To Testnet
 
 Now that you have a wallet, you can deploy with `forc deploy` and passing in the testnet endpoint like this:
 
-`forc deploy --url https://node-beta-1.fuel.network/graphql --gas-price 1`
+`forc deploy --url https://node-beta-2.fuel.network/graphql --gas-price 1`
 
 > **Note**
 > We set the gas price to 1. Without this flag, the gas price is 0 by default and the transaction will fail.
@@ -322,21 +326,25 @@ Finally, you will get back a `TransactionId` to confirm your contract was deploy
 
 Now we are going to
 
-1. **Initialize a React project.**
+1. **Initialize a Svelte project.**
 2. **Install the `fuels` SDK dependencies.**
 3. **Modify the App.**
 4. **Run our project.**
 
-## Initialize a React project
+## Initialize a Svelte project
 
 To split better our project let's create a new folder `frontend` and initialize our project inside it.
 
-In the terminal, go back up one directory and initialize a react project using [`Create React App`](https://create-react-app.dev/).
+In the terminal, go back up one directory and initialize a react project using [`npm create svelte@latest`](https://kit.svelte.dev).
 
 ```console
 $ cd ..
-$ npx create-react-app frontend --template typescript
-Success! Created frontend at Fuel/Web3RSVP/frontend
+$ npm create svelte@latest frontend 
+
+? Which Svelte app template? › - Use arrow-keys. Return to submit.
+    SvelteKit demo app
+❯   Skeleton project
+    Library skeleton project
 ```
 
 You should now have your outer folder, `Web3RSVP`, with two folders inside: `frontend` and `rsvpContract`
@@ -374,7 +382,7 @@ If you see the folder `Web3RSVP/rsvpContract/out` you will be able to see the AB
 Inside `Web3RSVP/frontend` run;
 
 ```console
-$ npx fuelchain --target=fuels --out-dir=./src/contracts ../rsvpContract/out/debug/*-abi.json
+$ npx fuelchain --target=fuels --out-dir=./src/lib/contracts ../rsvpContract/out/debug/*-abi.json
 Successfully generated 4 typings!
 ```
 
@@ -382,38 +390,7 @@ Now you should be able to find a new folder `Web3RSVP/frontend/src/contracts`. T
 
 ### Create A Wallet (Again)
 
-For interacting with the fuel network we have to submit signed transactions with enough funds to cover network fees. The Fuel TS SDK don't currently support Wallet integrations, requiring us to have a non-safe wallet inside the WebApp using a privateKey.
-
-> **Note**
-> This should be done only for development purpose. Never expose a web app with a private key inside. The Fuel Wallet is in active development, follow the progress [here](https://github.com/FuelLabs/fuels-wallet).
->
-> **Note**
-> The team is working to simplify the process of creating a wallet, and eliminate the need to create a wallet twice. Keep an eye out for these updates.
-
-In the root of the frontend project create a file, createWallet.js
-
-```js
-const { Wallet } = require("fuels");
-
-const wallet = Wallet.generate();
-
-console.log("address", wallet.address.toString());
-console.log("private key", wallet.privateKey);
-```
-
-In a terminal, run the following command:
-
-```console
-$ node createWallet.js
-address fuel160ek8t7fzz89wzl595yz0rjrgj3xezjp6pujxzt2chn70jrdylus5apcuq
-private key 0x719fb4da652f2bd4ad25ce04f4c2e491926605b40e5475a80551be68d57e0fcb
-```
-
-> **Note**
-> You should use the generated address and private key.
-
-Save the generated address and private key. You will need the private key later to set it as a string value for a variable `WALLET_SECRET` in your `App.tsx` file. More on that below.
-
+For interacting with the fuel network we have to submit signed transactions with enough funds to cover network fees. 
 First, take the address of your wallet and use it to get some coins from [the testnet faucet](https://faucet-beta-1.fuel.network/).
 
 Now you're ready to build and ship ⛽
