@@ -1,6 +1,5 @@
-import { browser } from '$app/environment';
-import { Wallet, WalletLocked, type Provider } from 'fuels';
-import { writable, readable } from 'svelte/store';
+import { Provider, WalletLocked } from 'fuels';
+import { writable } from 'svelte/store';
 
 
 type FuelWallet = {
@@ -9,12 +8,10 @@ type FuelWallet = {
 	wallet;
 	isConnected: boolean;
 };
+
 const web3 = writable<FuelWallet>({
 	walletAddress: '',
-	provider: () => {
-		if (browser) return window.FuelWeb3.getProvider();
-		return null;
-	},
+	provider: Provider,
 	wallet: WalletLocked,
 	isConnected: false,
 });

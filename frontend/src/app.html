@@ -8,6 +8,13 @@
 	</head>
 	<body class="bg-black">
 		<div>%sveltekit.body%</div>
+        <script>
+            window.process = {
+              env: {
+                NODE_ENV: {}
+              },
+            };
+        </script>
 	</body>
 
 </html>

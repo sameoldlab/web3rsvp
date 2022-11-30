@@ -2,14 +2,14 @@
 	import web3, { CONTRACT_ID } from '../Store';
 	import { Wallet, Contract } from 'fuels';
 	import { ContractAbi__factory } from '$lib/contracts';
-	import { error } from '@sveltejs/kit';
-	import type { ContractAbi } from '$lib/contracts';
-
+    
 	let rsvpId: string;
 	let deposit: string;
 	async function rsvp() {
 		try {
             const contract = ContractAbi__factory.connect($CONTRACT_ID, $web3.wallet);
+			console.log('Wallet: ', $web3.wallet);
+			console.log('Provider: ', $web3.provider);
 			console.log('RSVP to Event: ', rsvpId);
 			const { value, transactionResponse, transactionResult } = await contract.functions
 				.rsvp(rsvpId)

@@ -4,17 +4,14 @@
 	import { ContractAbi__factory, type ContractAbi } from '$lib/contracts';
 	import type { WalletLocked } from 'fuels';
 
-	// wallet.getBalances().then((balances) => {
-	// 	const balancesFormatted = balances.map((balance) => {
-	// 		return [balance.assetId, balance.amount.format()];
-	// 	});
-	// 	console.log('Wallet balances', balancesFormatted);
-	// });
     const numlen = (num: number) => Math.log(num) * Math.LOG10E + 1;
 	let eventName: string="", deposit: number, maxCap: number, eventID: string;
+
     $: eventLen = eventName == "" ? 'width:7rem' : `width: ${Math.floor(eventName.length)+4}rem !important`
     $: depositLen = !deposit ? 'width:3rem' : `width: ${numlen(deposit)+4}rem !important`
     $: capLen = !maxCap ? 'width:3rem' : `width: ${numlen(maxCap)+4}rem !important`
+
+
 	async function createEvent() {
 		try {
 			console.log('sending transaction');
